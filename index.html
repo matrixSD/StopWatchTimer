@@ -1,20 +1,129 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JavaScript Stop Watch</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
+    <style>
+        .calculator-container {
+            max-width: 450px;
+            margin: 40px auto;
+            padding: 25px;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-family: 'Tajawal', Arial, sans-serif;
+            direction: rtl;
+        }
+        h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus {
+            border-color: #007bff;
+        }
+        .result {
+            font-size: 20px;
+            color: #2c3e50;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .copy-btn {
+            padding: 12px 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        .copy-btn:active {
+            transform: translateY(0);
+        }
+        .discount-btn {
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .discount-btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        .discount-btn:active {
+            transform: translateY(0);
+        }
+        @media (max-width: 480px) {
+            .calculator-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="wrap">
-        <h1>Stop Watch By Matrix</h1>
-        <p><span id="second">00</span>:<span id="tens">00</span></p>
-        <button id="btn-start">Start</button>
-        <button id="btn-stop">Stop</button>
-        <button id="btn-reset">Reset</button>
+    <div class="calculator-container">
+        <h3>حاسبة خصم</h3>
+        <input type="number" id="amount" placeholder="أدخل المبلغ" oninput="calculateDiscount()">
+        <div class="result" id="result">المبلغ بعد الخصم: 0</div>
+        <div>
+            <button class="discount-btn" onclick="setDiscount(0.05)">بنكك يخصم 5%</button>
+            <button class="discount-btn" onclick="setDiscount(0.08)">ماي كاشي يخصم 8%</button>
+            <button class="discount-btn" onclick="setDiscount(0.15)">رصيد يخصم 15%</button>
+        </div>
+        <button class="copy-btn" onclick="copyResult()">نسخ المبلغ</button>
     </div>
+
+    <script>
+        let discountRate = 0.05; // القيمة الأولية للخصم
+
+        function calculateDiscount() {
+            const amount = parseFloat(document.getElementById('amount').value);
+            if (!isNaN(amount) && amount >= 0) {
+                const discount = amount * discountRate;
+                const finalAmount = Math.floor(amount - discount); // إزالة الأرقام العشرية
+                document.getElementById('result').innerText = `المبلغ بعد الخصم: ${finalAmount}`;
+            } else {
+                document.getElementById('result').innerText = 'المبلغ بعد الخصم: 0';
+            }
+        }
+
+        function setDiscount(rate) {
+            discountRate = rate; // تحديث النسبة المئوية للخصم
+            calculateDiscount(); // إعادة حساب المبلغ بعد الخصم
+        }
+
+        function copyResult() {
+            const resultText = document.getElementById('result').innerText.split(': ')[1];
+            const textArea = document.createElement('textarea');
+            textArea.value = resultText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            alert('تم نسخ المبلغ!');
+        }
+    </script>
 </body>
 </html>
